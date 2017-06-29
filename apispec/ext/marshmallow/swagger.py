@@ -232,7 +232,10 @@ def field2property(field, spec=None, use_refs=True, dump=True, name=None):
 
     default = field.default if dump else field.missing
     if default is not marshmallow.missing:
-        ret['default'] = default
+        try:
+            ret['default'] = default()
+        except TypeError:
+            ret['default'] = default
 
     choices = field2choices(field)
     if choices:
